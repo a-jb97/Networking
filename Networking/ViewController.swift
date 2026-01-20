@@ -24,15 +24,15 @@ class ViewController: UIViewController {
     }
     
     @objc private func randomImageButtonTapped() {
-        print(#function)
-        
         let vc = RandomImageViewController()
         
         navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func boxOfficeButtonTapped() {
+        let vc = BoxOfficeViewController()
         
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

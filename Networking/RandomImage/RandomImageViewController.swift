@@ -7,14 +7,15 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
+import Alamofire
 
 class RandomImageViewController: UIViewController {
     let randomImageLoadButton = MainButton(title: "랜덤 이미지 불러오기", backgroundColor: .systemBlue)
     let randomImageView = {
         let imageView = UIImageView()
         
-        imageView.contentMode = .scaleAspectFill
-        imageView.backgroundColor = .systemBrown
+        imageView.contentMode = .scaleAspectFit
         
         return imageView
     }()
@@ -23,7 +24,6 @@ class RandomImageViewController: UIViewController {
         
         label.textAlignment = .center
         label.font = .boldSystemFont(ofSize: 20)
-        label.text = "작가 : Alejandro Escamilla"
         
         return label
     }()
@@ -33,14 +33,13 @@ class RandomImageViewController: UIViewController {
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 14)
         label.textColor = .lightGray
-        label.text = "해상도 : 5,000 x 3,333"
         
         return label
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureHierarchy()
         configureLayout()
         configureView()
@@ -49,7 +48,18 @@ class RandomImageViewController: UIViewController {
     }
     
     @objc private func randomImageLoadButtonTapped() {
+        let url = "https://picsum.photos/id/\(Int.random(in: 1...100))/info"
         
+        AF.request(url, method: .get).responseDecodable(of: Picsum.self) { response in
+            switch response.result {
+            case .success(let value):
+                self.randomImageView.kf.setImage(with: URL(string: value.download_url))
+                self.authorLabel.text = value.author
+                self.resolutionLabel.text = "해상도 : \(value.width) x \(value.height)"
+            case .failure(let error):
+                print(error)
+            }
+        }
     }
 }
 
