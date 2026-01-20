@@ -18,6 +18,21 @@ class ViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureView()
+        
+        randomImageButton.addTarget(self, action: #selector(randomImageButtonTapped), for: .touchUpInside)
+        boxOfficeButton.addTarget(self, action: #selector(boxOfficeButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func randomImageButtonTapped() {
+        print(#function)
+        
+        let vc = RandomImageViewController()
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func boxOfficeButtonTapped() {
+        
     }
 }
 
@@ -29,7 +44,8 @@ extension ViewController: ViewDesignProtocol {
     
     func configureLayout() {
         randomImageButton.snp.makeConstraints { make in
-            make.center.equalTo(view.safeAreaLayoutGuide)
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.centerY.equalTo(view.safeAreaLayoutGuide).offset(-60)
             make.height.equalTo(50)
             make.width.equalTo(150)
         }
