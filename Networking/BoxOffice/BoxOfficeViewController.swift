@@ -32,6 +32,18 @@ class BoxOfficeViewController: UIViewController {
         
         return tableView
     }()
+    
+    // MARK: 어제 날짜
+    let previousDate = {
+        let previousDay = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        let format = DateFormatter()
+        
+        format.dateFormat = "yyyyMMdd"
+        
+        let convertPreviousDay = format.string(from: previousDay)
+        
+        return convertPreviousDay
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +54,7 @@ class BoxOfficeViewController: UIViewController {
         configureLayout()
         configureView()
         
-        callRequest(date: "20250723")
+        callRequest(date: previousDate)
         
         searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
     }
@@ -51,7 +63,7 @@ class BoxOfficeViewController: UIViewController {
         callRequest(date: dateTextField.text!)
     }
     
-    func callRequest(date: String) {
+    private func callRequest(date: String) {
         let url = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=3d21e6069bf78850c738916d85c1cbe0&targetDt=\(date)"
         
         AF.request(url, method: .get).responseDecodable(of: BoxOfficeResponse.self) { response in
