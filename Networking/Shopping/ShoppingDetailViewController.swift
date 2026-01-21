@@ -43,6 +43,11 @@ class ShoppingDetailViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureView()
+        
+        sortAccuracyButton.addTarget(self, action: #selector(sortAccuracyButtonTapped), for: .touchUpInside)
+        sortDateButton.addTarget(self, action: #selector(sortDateButtonTapped), for: .touchUpInside)
+        sortHighPriceButton.addTarget(self, action: #selector(sortHighPriceButtonTapped), for: .touchUpInside)
+        sortLowPriceButton.addTarget(self, action: #selector(sortLowPriceButtonTapped), for: .touchUpInside)
     }
     
     static func layout() -> UICollectionViewFlowLayout {
@@ -63,6 +68,42 @@ class ShoppingDetailViewController: UIViewController {
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth * 1.4)
         
         return layout
+    }
+    
+    @objc private func sortAccuracyButtonTapped() {
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "sim", type: Shopping.self) { shopping in
+            print(#function)
+            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
+            self.productList = shopping.items
+            self.shoppingCollectionView.reloadData()
+        }
+    }
+    
+    @objc private func sortDateButtonTapped() {
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "date", type: Shopping.self) { shopping in
+            print(#function)
+            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
+            self.productList = shopping.items
+            self.shoppingCollectionView.reloadData()
+        }
+    }
+    
+    @objc private func sortHighPriceButtonTapped() {
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "dsc", type: Shopping.self) { shopping in
+            print(#function)
+            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
+            self.productList = shopping.items
+            self.shoppingCollectionView.reloadData()
+        }
+    }
+    
+    @objc private func sortLowPriceButtonTapped() {
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "asc", type: Shopping.self) { shopping in
+            print(#function)
+            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
+            self.productList = shopping.items
+            self.shoppingCollectionView.reloadData()
+        }
     }
 }
 
@@ -125,11 +166,12 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.identifier, for: indexPath) as! ShoppingCollectionViewCell
+        let intLPrice = Int(productList[indexPath.row].lprice)
         
         item.productImageView.kf.setImage(with: URL(string: productList[indexPath.row].image))
         item.mallNameLabel.text = productList[indexPath.row].mallName
         item.titleLabel.text = productList[indexPath.row].title
-        item.priceLabel.text = productList[indexPath.row].lprice
+        item.priceLabel.text = "\(intLPrice!.formatted())"
         
         return item
     }
