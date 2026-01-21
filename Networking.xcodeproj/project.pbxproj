@@ -10,10 +10,12 @@
 		9E15F2EA2F1F6E7500F44630 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9E15F2E92F1F6E7500F44630 /* SnapKit */; };
 		9E15F2ED2F1F6E8600F44630 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 9E15F2EC2F1F6E8600F44630 /* Kingfisher */; };
 		9E15F2F02F1F6E9700F44630 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9E15F2EF2F1F6E9700F44630 /* Alamofire */; };
+		9E64812D2F20BEF100B0E252 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 9E64812C2F20BEF100B0E252 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		9E15F2D02F1F6E4700F44630 /* Networking.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Networking.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E64812C2F20BEF100B0E252 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -54,6 +56,7 @@
 		9E15F2C72F1F6E4700F44630 = {
 			isa = PBXGroup;
 			children = (
+				9E64812C2F20BEF100B0E252 /* .gitignore */,
 				9E15F2D22F1F6E4700F44630 /* Networking */,
 				9E15F2D12F1F6E4700F44630 /* Products */,
 			);
@@ -139,6 +142,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E64812D2F20BEF100B0E252 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
