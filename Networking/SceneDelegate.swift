@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         shoppingVC.tabBarItem = UITabBarItem(title: "쇼핑", image: UIImage(systemName: "cart.fill"), tag: 1)
         
         tabBarController.viewControllers = [mainVC, shoppingVC]
-        tabBarController.tabBar.tintColor = .black
+        tabBarController.tabBar.tintColor = .accent
         
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
