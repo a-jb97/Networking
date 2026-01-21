@@ -50,6 +50,8 @@ extension ShoppingViewController: ViewDesignProtocol {
 
 extension ShoppingViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        print(#function)
+        let vc = ShoppingDetailViewController()
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

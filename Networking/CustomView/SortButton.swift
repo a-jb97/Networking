@@ -24,5 +24,14 @@ class SortButton: UIButton {
         clipsToBounds = true
         layer.cornerRadius = 10
         layer.borderWidth = 1
+        contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        
+        if isSelected == true {
+            setTitleColor(.white, for: .normal)
+            backgroundColor = .black
+        } else {
+            setTitleColor(.black, for: .normal)
+            backgroundColor = .white
+        }
     }
 }
