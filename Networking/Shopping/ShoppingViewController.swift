@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Alamofire
 
 class ShoppingViewController: UIViewController {
     let shoppingSearchBar = {
@@ -52,6 +53,17 @@ extension ShoppingViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let vc = ShoppingDetailViewController()
         
-        navigationController?.pushViewController(vc, animated: true)
+        if searchBar.text!.count >= 2 {
+            vc.navigationItem.title = searchBar.text
+            
+            NetworkManager.shared.callRequest(query: searchBar.text!, start: 1, sort: "sim", type: Shopping.self) { shopping in
+                print(#function)
+                vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
+                vc.productList = shopping.items
+                vc.shoppingCollectionView.reloadData()
+            }
+            
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

@@ -39,16 +39,13 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
         label.font = .systemFont(ofSize: 12)
         label.textColor = .lightGray
         
-        label.text = "월드캠핑카"
-        
         return label
     }()
     let titleLabel = {
         let label = UILabel()
         
         label.font = .systemFont(ofSize: 13)
-        
-        label.text = "스타리아 2층캠핑카"
+        label.numberOfLines = 2
         
         return label
     }()
@@ -56,8 +53,6 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         
         label.font = .boldSystemFont(ofSize: 14)
-        
-        label.text = "19,000,000"
         
         return label
     }()
@@ -105,7 +100,7 @@ extension ShoppingCollectionViewCell: ViewDesignProtocol {
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(mallNameLabel.snp.bottom).offset(4)
-            make.leading.equalTo(contentView.safeAreaLayoutGuide)
+            make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide)
         }
         
         priceLabel.snp.makeConstraints { make in

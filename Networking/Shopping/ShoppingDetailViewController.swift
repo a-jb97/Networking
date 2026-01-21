@@ -8,13 +8,11 @@
 import UIKit
 import SnapKit
 import Kingfisher
-import Alamofire
 
 class ShoppingDetailViewController: UIViewController {
     let totalLabel = {
         let label = UILabel()
         
-        label.text = "13,2344234 개의 검색 결과"
         label.font = .boldSystemFont(ofSize: 14)
         label.textColor = .accent
         
@@ -36,6 +34,8 @@ class ShoppingDetailViewController: UIViewController {
         
         return collectionView
     }()
+    
+    var productList: [ShoppingDetail] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,12 +79,12 @@ extension ShoppingDetailViewController: ViewDesignProtocol {
     func configureLayout() {
         totalLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
-            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).offset(8)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).offset(16)
         }
         
         sortAccuracyButton.snp.makeConstraints { make in
             make.top.equalTo(totalLabel.snp.bottom).offset(8)
-            make.leading.equalTo(view.safeAreaLayoutGuide).offset(8)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(16)
             make.height.equalTo(40)
         }
         
@@ -120,11 +120,16 @@ extension ShoppingDetailViewController: ViewDesignProtocol {
 
 extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return productList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.identifier, for: indexPath) as! ShoppingCollectionViewCell
+        
+        item.productImageView.kf.setImage(with: URL(string: productList[indexPath.row].image))
+        item.mallNameLabel.text = productList[indexPath.row].mallName
+        item.titleLabel.text = productList[indexPath.row].title
+        item.priceLabel.text = productList[indexPath.row].lprice
         
         return item
     }
