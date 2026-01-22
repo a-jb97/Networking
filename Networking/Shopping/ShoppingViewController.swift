@@ -83,8 +83,12 @@ extension ShoppingViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         let vc = ShoppingDetailViewController()
         
+        // MARK: searchBar의 text가 2글자 이상일 때만
         if searchBar.text!.count >= 2 {
-            UserDefaultsManager.appendKeyword(searchBar.text!)
+            // MARK: 최근 검색어 중복 저장 방지
+            if !UserDefaultsManager.searchKeywords.contains(searchBar.text!) {
+                UserDefaultsManager.appendKeyword(searchBar.text!)
+            }
             
             vc.navigationItem.title = searchBar.text
             
