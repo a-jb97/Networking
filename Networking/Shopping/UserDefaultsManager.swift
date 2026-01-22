@@ -20,5 +20,5 @@ struct UserDefault<T> {
 
 class UserDefaultsManager {
     @UserDefault(key: "searchKeyword", value: nil)
-    static var nickname: [String]?
+    static var searchKeywords: [String]?
 }
