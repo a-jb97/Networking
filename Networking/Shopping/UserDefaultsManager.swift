@@ -19,6 +19,13 @@ struct UserDefault<T> {
 }
 
 class UserDefaultsManager {
-    @UserDefault(key: "searchKeyword", value: nil)
-    static var searchKeywords: [String]?
+    @UserDefault(key: "searchKeywords", value: [])
+    static var searchKeywords: [String]
+    
+    static func appendKeyword(_ keyword: String) {
+        var keywords = UserDefaults.standard.stringArray(forKey: "searchKeywords") ?? []
+        
+        keywords.append(keyword)
+        UserDefaults.standard.set(keywords, forKey: "searchKeywords")
+    }
 }
