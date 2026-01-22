@@ -21,12 +21,20 @@ class ShoppingViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizerTapped))
+        
+        view.addGestureRecognizer(tapGestureRecognizer)
 
         configureHierarchy()
         configureLayout()
         configureView()
         
         shoppingSearchBar.delegate = self
+    }
+    
+    @objc private func tapGestureRecognizerTapped(_ sender: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
 }
 

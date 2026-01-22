@@ -37,6 +37,13 @@ class ShoppingDetailViewController: UIViewController {
     
     var productList: [ShoppingDetail] = []
     
+    enum Sort {
+        static let sim = "sim"
+        static let date = "date"
+        static let asc = "asc"
+        static let dsc = "dsc"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,7 +78,7 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortAccuracyButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "sim", type: Shopping.self) { shopping in
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.sim, type: Shopping.self) { shopping in
             print(#function)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
@@ -80,7 +87,7 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortDateButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "date", type: Shopping.self) { shopping in
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.date, type: Shopping.self) { shopping in
             print(#function)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
@@ -89,7 +96,7 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortHighPriceButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "dsc", type: Shopping.self) { shopping in
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.dsc, type: Shopping.self) { shopping in
             print(#function)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
@@ -98,7 +105,7 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortLowPriceButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: "asc", type: Shopping.self) { shopping in
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.asc, type: Shopping.self) { shopping in
             print(#function)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
