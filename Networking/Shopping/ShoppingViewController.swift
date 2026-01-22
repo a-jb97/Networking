@@ -10,27 +10,42 @@ import SnapKit
 import Alamofire
 
 class ShoppingViewController: UIViewController {
-    let shoppingSearchBar = {
+    lazy var shoppingSearchBar = {
         let searchBar = UISearchBar()
         
+        searchBar.delegate = self
         searchBar.placeholder = "브랜드, 상품, 프로필, 태그 등"
         searchBar.searchBarStyle = .minimal
         
         return searchBar
     }()
+    lazy var recentSearchTableView = {
+        let tableView = UITableView()
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = 50
+        
+        return tableView
+    }()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        recentSearchTableView.reloadData()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizerTapped))
-        
         view.addGestureRecognizer(tapGestureRecognizer)
 
         configureHierarchy()
         configureLayout()
         configureView()
         
-        shoppingSearchBar.delegate = self
+        recentSearchTableView.isHidden = true
     }
     
     @objc private func tapGestureRecognizerTapped(_ sender: UITapGestureRecognizer) {
@@ -41,12 +56,19 @@ class ShoppingViewController: UIViewController {
 extension ShoppingViewController: ViewDesignProtocol {
     func configureHierarchy() {
         view.addSubview(shoppingSearchBar)
+        view.addSubview(recentSearchTableView)
     }
     
     func configureLayout() {
         shoppingSearchBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        recentSearchTableView.snp.makeConstraints { make in
+            make.top.equalTo(shoppingSearchBar.snp.bottom)
+            make.horizontalEdges.equalTo(view)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -62,6 +84,8 @@ extension ShoppingViewController: UISearchBarDelegate {
         let vc = ShoppingDetailViewController()
         
         if searchBar.text!.count >= 2 {
+            UserDefaultsManager.appendKeyword(searchBar.text!)
+            
             vc.navigationItem.title = searchBar.text
             
             NetworkManager.shared.callRequest(query: searchBar.text!, start: 1, sort: "sim", type: Shopping.self) { shopping in
@@ -72,6 +96,56 @@ extension ShoppingViewController: UISearchBarDelegate {
             }
             
             navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        recentSearchTableView.isHidden = false
+        
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        recentSearchTableView.isHidden = true
+        
+        return true
+    }
+}
+
+extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return UserDefaultsManager.searchKeywords.count + 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.row == 0 {
+            recentSearchTableView.register(recentSearchTableViewCell.self, forCellReuseIdentifier: recentSearchTableViewCell.identifier)
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: recentSearchTableViewCell.identifier, for: indexPath) as! recentSearchTableViewCell
+            
+            cell.buttonTap = {
+                UserDefaultsManager.searchKeywords.removeAll()
+                
+                tableView.reloadData()
+            }
+            
+            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+            
+            return cell
+        } else {
+            recentSearchTableView.register(recentSearchListTableViewCell.self, forCellReuseIdentifier: recentSearchListTableViewCell.identifier)
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: recentSearchListTableViewCell.identifier, for: indexPath) as! recentSearchListTableViewCell
+            
+            cell.keywordLabel.text = UserDefaultsManager.searchKeywords[indexPath.row - 1]
+            
+            cell.buttonTap = {
+                UserDefaultsManager.searchKeywords.remove(at: indexPath.row - 1)
+                
+                tableView.reloadData()
+            }
+            
+            return cell
         }
     }
 }

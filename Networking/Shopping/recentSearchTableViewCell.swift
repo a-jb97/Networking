@@ -9,12 +9,16 @@ import UIKit
 import SnapKit
 
 class recentSearchTableViewCell: UITableViewCell {
+    static let identifier = "recentSearchTableViewCell"
+    
+    var buttonTap: (() -> Void)?
+    
     let recentSearchLabel = {
         let label = UILabel()
         
         label.text = "최근 검색어"
-        label.textColor = .darkGray
-        label.font = .systemFont(ofSize: 17)
+        label.textColor = .lightGray
+        label.font = .boldSystemFont(ofSize: 17)
         
         return label
     }()
@@ -43,7 +47,7 @@ class recentSearchTableViewCell: UITableViewCell {
     }
     
     @objc private func allDeleteButtonTapped() {
-        UserDefaultsManager.searchKeywords?.removeAll()
+        buttonTap?()
     }
 }
 
@@ -55,13 +59,13 @@ extension recentSearchTableViewCell: ViewDesignProtocol {
     
     func configureLayout() {
         recentSearchLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(contentView.safeAreaLayoutGuide)
-            make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(8)
+            make.centerY.equalTo(contentView)
+            make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(16)
         }
         
         allDeleteButton.snp.makeConstraints { make in
-            make.centerX.equalTo(contentView.safeAreaLayoutGuide)
-            make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(8)
+            make.centerY.equalTo(contentView.safeAreaLayoutGuide)
+            make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(16)
         }
     }
     
