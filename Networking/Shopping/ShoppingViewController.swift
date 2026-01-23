@@ -32,13 +32,15 @@ class ShoppingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        recentSearchTableView.isHidden = true
+        shoppingSearchBar.becomeFirstResponder()
+        
+        recentSearchTableView.isHidden = false
         recentSearchTableView.reloadData()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureHierarchy()
         configureLayout()
         configureView()
@@ -85,9 +87,11 @@ extension ShoppingViewController: UISearchBarDelegate {
             }
             
             vc.navigationItem.title = searchBar.text
+            vc.start = 1
             
             NetworkManager.shared.callRequest(query: searchBar.text!, start: 1, sort: "sim", type: Shopping.self) { shopping in
                 print(#function)
+                vc.total = shopping.total
                 vc.sortAccuracyButton.isSelected = true
                 vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
                 vc.productList = shopping.items
@@ -155,8 +159,11 @@ extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = ShoppingDetailViewController()
         
+        vc.start = 1
+        
         NetworkManager.shared.callRequest(query: UserDefaultsManager.searchKeywords[indexPath.row - 1], start: 1, sort: "sim", type: Shopping.self) { shopping in
             print(#function)
+            vc.total = shopping.total
             vc.sortAccuracyButton.isSelected = true
             vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             vc.productList = shopping.items
@@ -167,6 +174,7 @@ extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
         
         UserDefaultsManager.insertKeywordIfContain(UserDefaultsManager.searchKeywords[indexPath.row - 1])
         vc.navigationItem.title = UserDefaultsManager.searchKeywords[0]
+        shoppingSearchBar.text = UserDefaultsManager.searchKeywords[0]
         
         navigationController?.pushViewController(vc, animated: true)
     }

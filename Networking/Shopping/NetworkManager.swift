@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-struct NetworkManager {
+final class NetworkManager {
     static let shared = NetworkManager()
     
     private init() {  }
@@ -16,7 +16,7 @@ struct NetworkManager {
     func callRequest<T: Decodable>(query: String, start: Int, sort: String, type: T.Type, success: @escaping (T) -> Void) {
         let url = "https://openapi.naver.com/v1/search/shop.json"
         let headers: HTTPHeaders = ["X-Naver-Client-Id":APIKey.clientID, "X-Naver-Client-Secret":APIKey.secretID]
-        let parameters: Parameters = ["query":query, "display":"100", "start":start, "sort":sort]
+        let parameters: Parameters = ["query":query, "display":"30", "start":start, "sort":sort]
         
         AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.queryString, headers: headers)
             .validate(statusCode: 200..<300)

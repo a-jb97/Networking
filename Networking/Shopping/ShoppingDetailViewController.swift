@@ -18,19 +18,16 @@ class ShoppingDetailViewController: UIViewController {
         
         return label
     }()
-    
     enum Sort: String {
         case sim = "sim"
         case date = "date"
         case dsc = "dsc"
         case asc = "asc"
     }
-    
     let sortAccuracyButton = SortButton(title: "정확도")
     let sortDateButton = SortButton(title: "날짜순")
     let sortHighPriceButton = SortButton(title: "가격높은순")
     let sortLowPriceButton = SortButton(title: "가격낮은순")
-    
     lazy var shoppingCollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: ShoppingDetailViewController.layout())
         
@@ -43,6 +40,9 @@ class ShoppingDetailViewController: UIViewController {
     }()
     
     var productList: [ShoppingDetail] = []
+    var start = 1
+    var total = 0
+    var sortStatus: Sort = .sim
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,11 +105,13 @@ class ShoppingDetailViewController: UIViewController {
         self.shoppingCollectionView.reloadData()
         self.shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
     }
-
     
     @objc private func sortAccuracyButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.sim.rawValue, type: Shopping.self) { shopping in
-            print(#function)
+        start = 1
+        sortStatus = .sim
+        
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.sim.rawValue, type: Shopping.self) { shopping in
+            self.total = shopping.total
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
             self.selectedButtonUI(button: self.sortAccuracyButton)
@@ -118,8 +120,11 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortDateButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
-            print(shopping.total)
+        start = 1
+        sortStatus = .date
+        
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
+            self.total = shopping.total
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
             self.selectedButtonUI(button: self.sortDateButton)
@@ -128,8 +133,11 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortHighPriceButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
-            print(shopping.total)
+        start = 1
+        sortStatus = .dsc
+        
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
+            self.total = shopping.total
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
             self.selectedButtonUI(button: self.sortHighPriceButton)
@@ -138,8 +146,11 @@ class ShoppingDetailViewController: UIViewController {
     }
     
     @objc private func sortLowPriceButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
-            print(shopping.total)
+        start = 1
+        sortStatus = .asc
+        
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
+            self.total = shopping.total
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
             self.selectedButtonUI(button: self.sortLowPriceButton)
@@ -201,6 +212,16 @@ extension ShoppingDetailViewController: ViewDesignProtocol {
 }
 
 extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.item == (productList.count - 1) && productList.count <= total {
+            start += 30
+            NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: sortStatus.rawValue, type: Shopping.self) { shopping in
+                self.productList.append(contentsOf: shopping.items)
+                collectionView.reloadData()
+            }
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return productList.count
     }
