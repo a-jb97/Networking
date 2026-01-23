@@ -25,7 +25,7 @@ class UserDefaultsManager {
     static func appendKeyword(_ keyword: String) {
         var keywords = UserDefaults.standard.stringArray(forKey: "searchKeywords") ?? []
         
-        keywords.append(keyword)
+        keywords.insert(keyword, at: 0)
         
         UserDefaults.standard.set(keywords, forKey: "searchKeywords")
     }

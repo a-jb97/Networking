@@ -157,15 +157,16 @@ extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
         
         NetworkManager.shared.callRequest(query: UserDefaultsManager.searchKeywords[indexPath.row - 1], start: 1, sort: "sim", type: Shopping.self) { shopping in
             print(#function)
-            vc.navigationItem.title = UserDefaultsManager.searchKeywords[indexPath.row - 1]
             vc.sortAccuracyButton.isSelected = true
             vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             vc.productList = shopping.items
             vc.shoppingCollectionView.reloadData()
         }
-        
         shoppingSearchBar.endEditing(true)
         recentSearchTableView.isHidden = true
+        
+        UserDefaultsManager.insertKeywordIfContain(UserDefaultsManager.searchKeywords[indexPath.row - 1])
+        vc.navigationItem.title = UserDefaultsManager.searchKeywords[0]
         
         navigationController?.pushViewController(vc, animated: true)
     }
