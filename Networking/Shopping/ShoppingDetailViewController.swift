@@ -19,6 +19,13 @@ class ShoppingDetailViewController: UIViewController {
         return label
     }()
     
+    enum Sort: String {
+        case sim = "sim"
+        case date = "date"
+        case dsc = "dsc"
+        case asc = "asc"
+    }
+    
     let sortAccuracyButton = SortButton(title: "정확도")
     let sortDateButton = SortButton(title: "날짜순")
     let sortHighPriceButton = SortButton(title: "가격높은순")
@@ -37,13 +44,6 @@ class ShoppingDetailViewController: UIViewController {
     
     var productList: [ShoppingDetail] = []
     
-    enum Sort {
-        static let sim = "sim"
-        static let date = "date"
-        static let asc = "asc"
-        static let dsc = "dsc"
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,6 +55,8 @@ class ShoppingDetailViewController: UIViewController {
         sortDateButton.addTarget(self, action: #selector(sortDateButtonTapped), for: .touchUpInside)
         sortHighPriceButton.addTarget(self, action: #selector(sortHighPriceButtonTapped), for: .touchUpInside)
         sortLowPriceButton.addTarget(self, action: #selector(sortLowPriceButtonTapped), for: .touchUpInside)
+        
+        selectedButtonUI(button: sortAccuracyButton)
     }
     
     static func layout() -> UICollectionViewFlowLayout {
@@ -77,39 +79,71 @@ class ShoppingDetailViewController: UIViewController {
         return layout
     }
     
+    // MARK: 선택한 버튼만 UI 변경, 중복 선택 방지
+    private func selectedButtonUI(button: UIButton) {
+        let buttons = [sortAccuracyButton, sortDateButton, sortHighPriceButton, sortLowPriceButton]
+        
+        for i in buttons {
+            i.isSelected = false
+            i.isEnabled = true
+            
+            i.setTitleColor(.black, for: .normal)
+            i.backgroundColor = .white
+            
+            if i == button {
+                i.isSelected = true
+                i.isEnabled = false
+                
+                i.setTitleColor(.white, for: .normal)
+                i.backgroundColor = .black
+            }
+        }
+    }
+    
+    // MARK: collectionView 리로드, 최상단으로 스크롤
+    private func updateScrollTopCollectionView() {
+        self.shoppingCollectionView.reloadData()
+        self.shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
+    }
+
+    
     @objc private func sortAccuracyButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.sim, type: Shopping.self) { shopping in
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.sim.rawValue, type: Shopping.self) { shopping in
             print(#function)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
-            self.shoppingCollectionView.reloadData()
+            self.selectedButtonUI(button: self.sortAccuracyButton)
+            self.updateScrollTopCollectionView()
         }
     }
     
     @objc private func sortDateButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.date, type: Shopping.self) { shopping in
-            print(#function)
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
+            print(shopping.total)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
-            self.shoppingCollectionView.reloadData()
+            self.selectedButtonUI(button: self.sortDateButton)
+            self.updateScrollTopCollectionView()
         }
     }
     
     @objc private func sortHighPriceButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.dsc, type: Shopping.self) { shopping in
-            print(#function)
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
+            print(shopping.total)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
-            self.shoppingCollectionView.reloadData()
+            self.selectedButtonUI(button: self.sortHighPriceButton)
+            self.updateScrollTopCollectionView()
         }
     }
     
     @objc private func sortLowPriceButtonTapped() {
-        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.asc, type: Shopping.self) { shopping in
-            print(#function)
+        NetworkManager.shared.callRequest(query: navigationItem.title!, start: 1, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
+            print(shopping.total)
             self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             self.productList = shopping.items
-            self.shoppingCollectionView.reloadData()
+            self.selectedButtonUI(button: self.sortLowPriceButton)
+            self.updateScrollTopCollectionView()
         }
     }
 }
