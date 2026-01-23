@@ -32,24 +32,16 @@ class ShoppingViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        recentSearchTableView.isHidden = true
         recentSearchTableView.reloadData()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGestureRecognizerTapped))
-        view.addGestureRecognizer(tapGestureRecognizer)
 
         configureHierarchy()
         configureLayout()
         configureView()
-        
-        recentSearchTableView.isHidden = true
-    }
-    
-    @objc private func tapGestureRecognizerTapped(_ sender: UITapGestureRecognizer) {
-        view.endEditing(true)
     }
 }
 
@@ -85,19 +77,26 @@ extension ShoppingViewController: UISearchBarDelegate {
         
         // MARK: searchBar의 text가 2글자 이상일 때만
         if searchBar.text!.count >= 2 {
-            // MARK: 최근 검색어 중복 저장 방지
-            if !UserDefaultsManager.searchKeywords.contains(searchBar.text!) {
-                UserDefaultsManager.appendKeyword(searchBar.text!)
+            // MARK: 최근 검색어 중복 저장 방지, 공백 제거
+            if !UserDefaultsManager.searchKeywords.contains(searchBar.text!.replacingOccurrences(of: " ", with: "")) {
+                UserDefaultsManager.appendKeyword(searchBar.text!.replacingOccurrences(of: " ", with: ""))
+            } else {
+                UserDefaultsManager.insertKeywordIfContain(searchBar.text!.replacingOccurrences(of: " ", with: ""))
             }
             
             vc.navigationItem.title = searchBar.text
             
             NetworkManager.shared.callRequest(query: searchBar.text!, start: 1, sort: "sim", type: Shopping.self) { shopping in
                 print(#function)
+                vc.sortAccuracyButton.isSelected = true
                 vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
                 vc.productList = shopping.items
                 vc.shoppingCollectionView.reloadData()
             }
+            
+            shoppingSearchBar.text = nil
+            shoppingSearchBar.endEditing(true)
+            recentSearchTableView.isHidden = true
             
             navigationController?.pushViewController(vc, animated: true)
         }
@@ -151,5 +150,23 @@ extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
             
             return cell
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = ShoppingDetailViewController()
+        
+        NetworkManager.shared.callRequest(query: UserDefaultsManager.searchKeywords[indexPath.row - 1], start: 1, sort: "sim", type: Shopping.self) { shopping in
+            print(#function)
+            vc.navigationItem.title = UserDefaultsManager.searchKeywords[indexPath.row - 1]
+            vc.sortAccuracyButton.isSelected = true
+            vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
+            vc.productList = shopping.items
+            vc.shoppingCollectionView.reloadData()
+        }
+        
+        shoppingSearchBar.endEditing(true)
+        recentSearchTableView.isHidden = true
+        
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

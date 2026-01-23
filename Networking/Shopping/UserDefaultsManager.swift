@@ -26,6 +26,31 @@ class UserDefaultsManager {
         var keywords = UserDefaults.standard.stringArray(forKey: "searchKeywords") ?? []
         
         keywords.append(keyword)
+        
+        UserDefaults.standard.set(keywords, forKey: "searchKeywords")
+    }
+    
+    // MARK: 과거 검색어 다시 검색 시 최상단으로 검색어 이동
+    static func insertKeywordIfContain(_ keyword: String) {
+        var keywords = UserDefaults.standard.stringArray(forKey: "searchKeywords") ?? []
+        let keywordIndex: Int? = takeIndex(keyword: keyword)
+        
+        func takeIndex(keyword: String) -> Int? {
+            for i in 0..<keywords.count {
+                if keywords[i] == keyword {
+                    print(i)
+                    return i
+                }
+            }
+            print("nil")
+            return nil
+        }
+        
+        if keywordIndex != nil {
+            keywords.remove(at: keywordIndex!)
+            keywords.insert(keyword, at: 0)
+        }
+        
         UserDefaults.standard.set(keywords, forKey: "searchKeywords")
     }
 }
