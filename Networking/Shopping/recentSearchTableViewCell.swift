@@ -8,9 +8,7 @@
 import UIKit
 import SnapKit
 
-class recentSearchTableViewCell: UITableViewCell {
-    static let identifier = "recentSearchTableViewCell"
-    
+class recentSearchTableViewCell: BaseTableViewCell {
     var buttonTap: (() -> Void)?
     
     let recentSearchLabel = {
@@ -35,29 +33,19 @@ class recentSearchTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        configureHierarchy()
-        configureLayout()
-        configureView()
-        
         allDeleteButton.addTarget(self, action: #selector(allDeleteButtonTapped), for: .touchUpInside)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     @objc private func allDeleteButtonTapped() {
         buttonTap?()
     }
-}
-
-extension recentSearchTableViewCell: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         contentView.addSubview(recentSearchLabel)
         contentView.addSubview(allDeleteButton)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         recentSearchLabel.snp.makeConstraints { make in
             make.centerY.equalTo(contentView)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(16)
@@ -67,9 +55,5 @@ extension recentSearchTableViewCell: ViewDesignProtocol {
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(16)
         }
-    }
-    
-    func configureView() {
-        contentView.backgroundColor = .white
     }
 }

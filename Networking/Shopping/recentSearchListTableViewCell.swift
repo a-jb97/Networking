@@ -8,9 +8,7 @@
 import UIKit
 import SnapKit
 
-class recentSearchListTableViewCell: UITableViewCell {
-    static let identifier = "recentSearchListTableViewCell"
-    
+class recentSearchListTableViewCell: BaseTableViewCell {
     var buttonTap: (() -> Void)?
     
     let magnifyImageView = {
@@ -44,30 +42,20 @@ class recentSearchListTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        configureHierarchy()
-        configureLayout()
-        configureView()
-        
         deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     @objc private func deleteButtonTapped() {
         buttonTap?()
     }
-}
-
-extension recentSearchListTableViewCell: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         contentView.addSubview(magnifyImageView)
         contentView.addSubview(keywordLabel)
         contentView.addSubview(deleteButton)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         magnifyImageView.snp.makeConstraints { make in
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
             make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(16)
@@ -83,9 +71,5 @@ extension recentSearchListTableViewCell: ViewDesignProtocol {
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(16)
         }
-    }
-    
-    func configureView() {
-        contentView.backgroundColor = .white
     }
 }

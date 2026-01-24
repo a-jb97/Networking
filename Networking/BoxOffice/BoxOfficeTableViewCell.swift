@@ -8,9 +8,7 @@
 import UIKit
 import SnapKit
 
-class BoxOfficeTableViewCell: UITableViewCell {
-    static let identifier = "BoxOfficeTableViewCell"
-    
+class BoxOfficeTableViewCell: BaseTableViewCell {
     let rankLabel = {
         let label = UILabel()
         
@@ -39,27 +37,13 @@ class BoxOfficeTableViewCell: UITableViewCell {
         return label
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        configureHierarchy()
-        configureLayout()
-        configureView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension BoxOfficeTableViewCell: ViewDesignProtocol {
-    func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(rankLabel)
         contentView.addSubview(movieTitleLabel)
         contentView.addSubview(dateLabel)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         rankLabel.snp.makeConstraints { make in
             make.leading.equalTo(contentView.safeAreaLayoutGuide).offset(16)
             make.verticalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(12)
@@ -76,9 +60,5 @@ extension BoxOfficeTableViewCell: ViewDesignProtocol {
             make.trailing.equalTo(contentView.safeAreaLayoutGuide).inset(16)
             make.verticalEdges.equalTo(contentView.safeAreaLayoutGuide).inset(12)
         }
-    }
-    
-    func configureView() {
-        contentView.backgroundColor = .white
     }
 }

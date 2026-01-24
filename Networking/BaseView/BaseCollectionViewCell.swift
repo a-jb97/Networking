@@ -1,5 +1,5 @@
 //
-//  BaseTableViewCell.swift
+//  BaseCollectionViewCell.swift
 //  Networking
 //
 //  Created by 전민돌 on 1/24/26.
@@ -7,9 +7,9 @@
 
 import UIKit
 
-class BaseTableViewCell: UITableViewCell, ViewDesignProtocol {
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+class BaseCollectionViewCell: UICollectionViewCell, ViewDesignProtocol {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         configureHierarchy()
         configureLayout()

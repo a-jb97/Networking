@@ -8,9 +8,7 @@
 import UIKit
 import SnapKit
 
-class ShoppingCollectionViewCell: UICollectionViewCell {
-    static let identifier = "ShoppingCollectionViewCell"
-    
+class ShoppingCollectionViewCell: BaseCollectionViewCell {
     let productImageView = {
         let imageView = UIImageView()
         
@@ -57,21 +55,7 @@ class ShoppingCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        configureHierarchy()
-        configureLayout()
-        configureView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension ShoppingCollectionViewCell: ViewDesignProtocol {
-    func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(productImageView)
         contentView.addSubview(likeButton)
         contentView.addSubview(mallNameLabel)
@@ -79,7 +63,7 @@ extension ShoppingCollectionViewCell: ViewDesignProtocol {
         contentView.addSubview(priceLabel)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         productImageView.snp.makeConstraints { make in
             make.top.equalTo(contentView.safeAreaLayoutGuide)
             make.horizontalEdges.equalTo(contentView.safeAreaLayoutGuide)
@@ -107,9 +91,5 @@ extension ShoppingCollectionViewCell: ViewDesignProtocol {
             make.top.equalTo(titleLabel.snp.bottom).offset(4)
             make.leading.equalTo(contentView.safeAreaLayoutGuide)
         }
-    }
-    
-    func configureView() {
-        contentView.backgroundColor = .white
     }
 }
