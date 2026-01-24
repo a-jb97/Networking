@@ -8,16 +8,12 @@
 import UIKit
 import SnapKit
 
-class ViewController: UIViewController {
+class ViewController: BaseViewController {
     let randomImageButton = MainButton(title: "랜덤 이미지", backgroundColor: .systemBlue)
     let boxOfficeButton = MainButton(title: "박스오피스", backgroundColor: .systemBrown)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureHierarchy()
-        configureLayout()
-        configureView()
         
         randomImageButton.addTarget(self, action: #selector(randomImageButtonTapped), for: .touchUpInside)
         boxOfficeButton.addTarget(self, action: #selector(boxOfficeButtonTapped), for: .touchUpInside)
@@ -34,15 +30,13 @@ class ViewController: UIViewController {
         
         navigationController?.pushViewController(vc, animated: true)
     }
-}
-
-extension ViewController: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         view.addSubview(randomImageButton)
         view.addSubview(boxOfficeButton)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         randomImageButton.snp.makeConstraints { make in
             make.centerX.equalTo(view.safeAreaLayoutGuide)
             make.centerY.equalTo(view.safeAreaLayoutGuide).offset(-60)
@@ -56,9 +50,5 @@ extension ViewController: ViewDesignProtocol {
             make.height.equalTo(50)
             make.width.equalTo(150)
         }
-    }
-    
-    func configureView() {
-        view.backgroundColor = .white
     }
 }

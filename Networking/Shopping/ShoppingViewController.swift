@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Alamofire
 
-class ShoppingViewController: UIViewController {
+class ShoppingViewController: BaseViewController {
     lazy var shoppingSearchBar = {
         let searchBar = UISearchBar()
         
@@ -37,23 +37,13 @@ class ShoppingViewController: UIViewController {
         recentSearchTableView.isHidden = false
         recentSearchTableView.reloadData()
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        configureHierarchy()
-        configureLayout()
-        configureView()
-    }
-}
-
-extension ShoppingViewController: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         view.addSubview(shoppingSearchBar)
         view.addSubview(recentSearchTableView)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         shoppingSearchBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
@@ -66,8 +56,8 @@ extension ShoppingViewController: ViewDesignProtocol {
         }
     }
     
-    func configureView() {
-        view.backgroundColor = .white
+    override func configureView() {
+        super.configureView()
         
         navigationItem.title = "도봉러의 쇼핑쇼핑"
     }
@@ -103,18 +93,6 @@ extension ShoppingViewController: UISearchBarDelegate {
             
             navigationController?.pushViewController(vc, animated: true)
         }
-    }
-    
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        recentSearchTableView.isHidden = false
-        
-        return true
-    }
-    
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        recentSearchTableView.isHidden = true
-        
-        return true
     }
 }
 
@@ -161,7 +139,6 @@ extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
         vc.start = 1
         
         NetworkManager.shared.callRequest(query: UserDefaultsManager.searchKeywords[indexPath.row - 1], start: 1, sort: "sim", type: Shopping.self) { shopping in
-            print(#function)
             vc.total = shopping.total
             vc.sortAccuracyButton.isSelected = true
             vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"

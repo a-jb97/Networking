@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Alamofire
 
-class BoxOfficeViewController: UIViewController {
+class BoxOfficeViewController: BaseViewController {
     let dateTextField = {
         let textField = UITextField()
         
@@ -49,10 +49,6 @@ class BoxOfficeViewController: UIViewController {
         super.viewDidLoad()
         
         navigationItem.title = "박스오피스"
-
-        configureHierarchy()
-        configureLayout()
-        configureView()
         
         callRequest(date: previousDate)
         
@@ -76,16 +72,14 @@ class BoxOfficeViewController: UIViewController {
             }
         }
     }
-}
-
-extension BoxOfficeViewController: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         view.addSubview(dateTextField)
         view.addSubview(searchButton)
         view.addSubview(boxOfficeTableView)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         dateTextField.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(16)
@@ -104,10 +98,6 @@ extension BoxOfficeViewController: ViewDesignProtocol {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-    }
-    
-    func configureView() {
-        view.backgroundColor = .white
     }
 }
 

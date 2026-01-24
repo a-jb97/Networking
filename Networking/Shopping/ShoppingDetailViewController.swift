@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Kingfisher
 
-class ShoppingDetailViewController: UIViewController {
+class ShoppingDetailViewController: BaseViewController {
     let totalLabel = {
         let label = UILabel()
         
@@ -46,10 +46,6 @@ class ShoppingDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configureHierarchy()
-        configureLayout()
-        configureView()
         
         sortAccuracyButton.addTarget(self, action: #selector(sortAccuracyButtonTapped), for: .touchUpInside)
         sortDateButton.addTarget(self, action: #selector(sortDateButtonTapped), for: .touchUpInside)
@@ -100,22 +96,13 @@ class ShoppingDetailViewController: UIViewController {
         }
     }
     
-    // MARK: collectionView 리로드, 최상단으로 스크롤
-    private func updateScrollTopCollectionView() {
-        self.shoppingCollectionView.reloadData()
-        self.shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
-    }
-    
     @objc private func sortAccuracyButtonTapped() {
         sortStatus = .sim
         start = 1
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.sim.rawValue, type: Shopping.self) { shopping in
-            self.total = shopping.total
-            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
-            self.productList = shopping.items
+            self.networkingResultButtonTapped(value: shopping)
             self.selectedButtonUI(button: self.sortAccuracyButton)
-            self.updateScrollTopCollectionView()
         }
     }
     
@@ -155,10 +142,14 @@ class ShoppingDetailViewController: UIViewController {
         self.totalLabel.text = "\(value.total.formatted()) 개의 검색 결과"
         self.updateScrollTopCollectionView()
     }
-}
-
-extension ShoppingDetailViewController: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    // MARK: collectionView 리로드, 최상단으로 스크롤
+    private func updateScrollTopCollectionView() {
+        self.shoppingCollectionView.reloadData()
+        self.shoppingCollectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .top, animated: false)
+    }
+    
+    override func configureHierarchy() {
         view.addSubview(totalLabel)
         view.addSubview(sortAccuracyButton)
         view.addSubview(sortDateButton)
@@ -167,7 +158,7 @@ extension ShoppingDetailViewController: ViewDesignProtocol {
         view.addSubview(shoppingCollectionView)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         totalLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide).offset(16)
@@ -202,10 +193,6 @@ extension ShoppingDetailViewController: ViewDesignProtocol {
             make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-    }
-    
-    func configureView() {
-        view.backgroundColor = .white
     }
 }
 

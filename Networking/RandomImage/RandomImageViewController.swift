@@ -10,7 +10,7 @@ import SnapKit
 import Kingfisher
 import Alamofire
 
-class RandomImageViewController: UIViewController {
+class RandomImageViewController: BaseViewController {
     let randomImageLoadButton = MainButton(title: "랜덤 이미지 불러오기", backgroundColor: .systemBlue)
     let randomImageView = {
         let imageView = UIImageView()
@@ -40,10 +40,6 @@ class RandomImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureView()
-        
         randomImageLoadButton.addTarget(self, action: #selector(randomImageLoadButtonTapped), for: .touchUpInside)
     }
     
@@ -61,17 +57,15 @@ class RandomImageViewController: UIViewController {
             }
         }
     }
-}
-
-extension RandomImageViewController: ViewDesignProtocol {
-    func configureHierarchy() {
+    
+    override func configureHierarchy() {
         view.addSubview(randomImageLoadButton)
         view.addSubview(randomImageView)
         view.addSubview(authorLabel)
         view.addSubview(resolutionLabel)
     }
     
-    func configureLayout() {
+    override func configureLayout() {
         randomImageLoadButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.centerX.equalTo(view.safeAreaLayoutGuide)
@@ -94,9 +88,5 @@ extension RandomImageViewController: ViewDesignProtocol {
             make.top.equalTo(authorLabel.snp.bottom).offset(8)
             make.centerX.equalTo(view.safeAreaLayoutGuide)
         }
-    }
-    
-    func configureView() {
-        view.backgroundColor = .white
     }
 }
