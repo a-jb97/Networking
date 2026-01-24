@@ -124,11 +124,8 @@ class ShoppingDetailViewController: UIViewController {
         sortStatus = .date
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
-            self.total = shopping.total
-            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
-            self.productList = shopping.items
+            self.networkingResultButtonTapped(value: shopping)
             self.selectedButtonUI(button: self.sortDateButton)
-            self.updateScrollTopCollectionView()
         }
     }
     
@@ -137,11 +134,8 @@ class ShoppingDetailViewController: UIViewController {
         sortStatus = .dsc
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
-            self.total = shopping.total
-            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
-            self.productList = shopping.items
+            self.networkingResultButtonTapped(value: shopping)
             self.selectedButtonUI(button: self.sortHighPriceButton)
-            self.updateScrollTopCollectionView()
         }
     }
     
@@ -150,12 +144,16 @@ class ShoppingDetailViewController: UIViewController {
         sortStatus = .asc
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
-            self.total = shopping.total
-            self.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
-            self.productList = shopping.items
+            self.networkingResultButtonTapped(value: shopping)
             self.selectedButtonUI(button: self.sortLowPriceButton)
-            self.updateScrollTopCollectionView()
         }
+    }
+    
+    private func networkingResultButtonTapped(value: Shopping) {
+        self.total = value.total
+        self.totalLabel.text = "\(value.total.formatted()) 개의 검색 결과"
+        self.productList = value.items
+        self.updateScrollTopCollectionView()
     }
 }
 
@@ -214,10 +212,13 @@ extension ShoppingDetailViewController: ViewDesignProtocol {
 extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.item == (productList.count - 1) && productList.count <= total {
-            start += 30
-            NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: sortStatus.rawValue, type: Shopping.self) { shopping in
-                self.productList.append(contentsOf: shopping.items)
-                collectionView.reloadData()
+            while start <= 100 {
+                start += 30
+                
+                NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: sortStatus.rawValue, type: Shopping.self) { shopping in
+                    self.productList.append(contentsOf: shopping.items)
+                    collectionView.reloadData()
+                }
             }
         }
     }

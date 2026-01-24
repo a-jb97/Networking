@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 
+// MARK: Singletone Pattern
 final class NetworkManager {
     static let shared = NetworkManager()
     

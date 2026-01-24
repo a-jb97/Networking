@@ -90,7 +90,6 @@ extension ShoppingViewController: UISearchBarDelegate {
             vc.start = 1
             
             NetworkManager.shared.callRequest(query: searchBar.text!, start: 1, sort: "sim", type: Shopping.self) { shopping in
-                print(#function)
                 vc.total = shopping.total
                 vc.sortAccuracyButton.isSelected = true
                 vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
