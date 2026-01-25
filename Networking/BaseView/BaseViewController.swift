@@ -8,6 +8,7 @@
 import UIKit
 
 class BaseViewController: UIViewController, ViewDesignProtocol {
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,5 +32,11 @@ class BaseViewController: UIViewController, ViewDesignProtocol {
     
     func keyboardDismiss() {
         view.endEditing(true)
+    }
+    
+    func showAlert(message: String) {
+        let alert = Alert.shared.makeAlert(message: message)
+        
+        self.present(alert, animated: true)
     }
 }
