@@ -63,7 +63,7 @@ final class NetworkManager {
                 case .success(let value):
                     success(value)
                     
-                case .failure(let error):
+                case .failure(_):
                     let networkError: NetworkError
                     
                     switch statusCode {

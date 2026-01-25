@@ -85,7 +85,10 @@ extension ShoppingViewController: UISearchBarDelegate {
                 vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
                 vc.productList = shopping.items
                 vc.shoppingCollectionView.reloadData()
+            } failure: { networkError in
+                self.showAlert(message: networkError.description)
             }
+
             
             shoppingSearchBar.text = nil
             shoppingSearchBar.endEditing(true)
@@ -144,7 +147,10 @@ extension ShoppingViewController: UITableViewDelegate, UITableViewDataSource {
             vc.totalLabel.text = "\(shopping.total.formatted()) 개의 검색 결과"
             vc.productList = shopping.items
             vc.shoppingCollectionView.reloadData()
+        } failure: { networkError in
+            self.showAlert(message: networkError.description)
         }
+        
         shoppingSearchBar.endEditing(true)
         recentSearchTableView.isHidden = true
         

@@ -103,6 +103,8 @@ class ShoppingDetailViewController: BaseViewController {
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.sim.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
             self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+        } failure: { networkError in
+            self.showAlert(message: networkError.description)
         }
     }
     
@@ -112,7 +114,9 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(selectedButton: self.sortDateButton)
+            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+        } failure: { networkError in
+            self.showAlert(message: networkError.description)
         }
     }
     
@@ -122,7 +126,9 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(selectedButton: self.sortHighPriceButton)
+            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+        } failure: { networkError in
+            self.showAlert(message: networkError.description)
         }
     }
     
@@ -132,7 +138,9 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(selectedButton: self.sortLowPriceButton)
+            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+        } failure: { networkError in
+            self.showAlert(message: networkError.description)
         }
     }
     
@@ -207,6 +215,8 @@ extension ShoppingDetailViewController: UICollectionViewDelegate, UICollectionVi
                 NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: sortStatus.rawValue, type: Shopping.self) { shopping in
                     self.productList.append(contentsOf: shopping.items)
                     collectionView.reloadData()
+                } failure: { networkError in
+                    self.showAlert(message: networkError.description)
                 }
             }
         }
