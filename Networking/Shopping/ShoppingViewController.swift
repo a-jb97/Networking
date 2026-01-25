@@ -68,7 +68,7 @@ extension ShoppingViewController: UISearchBarDelegate {
         let vc = ShoppingDetailViewController()
         
         // MARK: searchBar의 text가 2글자 이상일 때만
-        if searchBar.text!.count >= 2 {
+        if searchBar.text!.replacingOccurrences(of: " ", with: "").count >= 2 {
             // MARK: 최근 검색어 중복 저장 방지, 공백 제거
             if !UserDefaultsManager.searchKeywords.contains(searchBar.text!.replacingOccurrences(of: " ", with: "")) {
                 UserDefaultsManager.appendKeyword(searchBar.text!.replacingOccurrences(of: " ", with: ""))
@@ -95,6 +95,8 @@ extension ShoppingViewController: UISearchBarDelegate {
             recentSearchTableView.isHidden = true
             
             navigationController?.pushViewController(vc, animated: true)
+        } else {
+            self.showAlert(message: "2글자 이상 검색해주세요!")
         }
     }
 }
