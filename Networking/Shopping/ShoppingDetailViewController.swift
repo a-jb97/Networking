@@ -52,7 +52,7 @@ class ShoppingDetailViewController: BaseViewController {
         sortHighPriceButton.addTarget(self, action: #selector(sortHighPriceButtonTapped), for: .touchUpInside)
         sortLowPriceButton.addTarget(self, action: #selector(sortLowPriceButtonTapped), for: .touchUpInside)
         
-        selectedButtonUI(button: sortAccuracyButton)
+        selectedButtonUI(selectedButton: sortAccuracyButton)
     }
     
     static func layout() -> UICollectionViewFlowLayout {
@@ -76,22 +76,22 @@ class ShoppingDetailViewController: BaseViewController {
     }
     
     // MARK: 선택한 버튼만 UI 변경, 중복 선택 방지
-    private func selectedButtonUI(button: UIButton) {
+    private func selectedButtonUI(selectedButton: UIButton) {
         let buttons = [sortAccuracyButton, sortDateButton, sortHighPriceButton, sortLowPriceButton]
         
-        for i in buttons {
-            i.isSelected = false
-            i.isEnabled = true
+        for button in buttons {
+            button.isSelected = false
+            button.isEnabled = true
             
-            i.setTitleColor(.black, for: .normal)
-            i.backgroundColor = .white
+            button.setTitleColor(.black, for: .normal)
+            button.backgroundColor = .white
             
-            if i == button {
-                i.isSelected = true
-                i.isEnabled = false
+            if button == selectedButton {
+                button.isSelected = true
+                button.isEnabled = false
                 
-                i.setTitleColor(.white, for: .normal)
-                i.backgroundColor = .black
+                button.setTitleColor(.white, for: .normal)
+                button.backgroundColor = .black
             }
         }
     }
@@ -102,7 +102,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.sim.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(button: self.sortAccuracyButton)
+            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
         }
     }
     
@@ -112,7 +112,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(button: self.sortDateButton)
+            self.selectedButtonUI(selectedButton: self.sortDateButton)
         }
     }
     
@@ -122,7 +122,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(button: self.sortHighPriceButton)
+            self.selectedButtonUI(selectedButton: self.sortHighPriceButton)
         }
     }
     
@@ -132,7 +132,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(button: self.sortLowPriceButton)
+            self.selectedButtonUI(selectedButton: self.sortLowPriceButton)
         }
     }
     
