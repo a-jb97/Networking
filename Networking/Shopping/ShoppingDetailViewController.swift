@@ -114,7 +114,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.date.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+            self.selectedButtonUI(selectedButton: self.sortDateButton)
         } failure: { networkError in
             self.showAlert(message: networkError.description)
         }
@@ -126,7 +126,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.dsc.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+            self.selectedButtonUI(selectedButton: self.sortHighPriceButton)
         } failure: { networkError in
             self.showAlert(message: networkError.description)
         }
@@ -138,7 +138,7 @@ class ShoppingDetailViewController: BaseViewController {
         
         NetworkManager.shared.callRequest(query: navigationItem.title!, start: start, sort: Sort.asc.rawValue, type: Shopping.self) { shopping in
             self.networkingResultButtonTapped(value: shopping)
-            self.selectedButtonUI(selectedButton: self.sortAccuracyButton)
+            self.selectedButtonUI(selectedButton: self.sortLowPriceButton)
         } failure: { networkError in
             self.showAlert(message: networkError.description)
         }
