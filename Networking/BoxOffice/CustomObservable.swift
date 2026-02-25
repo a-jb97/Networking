@@ -10,10 +10,6 @@ import RxSwift
 import RxCocoa
 import Alamofire
 
-enum BoxOfficeError: Error {
-    case invalidFormat
-}
-
 enum BoxOfficeNetworkError: Error {
     case badRequest
     case unAuthorized
