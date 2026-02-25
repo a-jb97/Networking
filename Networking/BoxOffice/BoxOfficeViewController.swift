@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import Alamofire
+import RxSwift
+import RxCocoa
 
 class BoxOfficeViewController: BaseViewController {
     let dateTextField = {
