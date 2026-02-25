@@ -53,8 +53,6 @@ class BoxOfficeViewController: BaseViewController {
         
         navigationItem.title = "박스오피스"
         
-//        callRequest(date: previousDate)
-        
         bind()
     }
     
@@ -80,20 +78,6 @@ class BoxOfficeViewController: BaseViewController {
             }
             .disposed(by: disposeBag)
     }
-    
-//    private func callRequest(date: String) {
-//        let url = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=3d21e6069bf78850c738916d85c1cbe0&targetDt=\(date)"
-//        
-//        AF.request(url, method: .get).responseDecodable(of: BoxOfficeResponse.self) { response in
-//            switch response.result {
-//            case .success(let value):
-//                self.boxOfficeList = value.boxOfficeResult.dailyBoxOfficeList
-//                self.boxOfficeTableView.reloadData()
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
-//    }
     
     override func configureHierarchy() {
         view.addSubview(dateTextField)
@@ -122,19 +106,3 @@ class BoxOfficeViewController: BaseViewController {
         }
     }
 }
-
-//extension BoxOfficeViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return boxOfficeList.count
-//    }
-//    
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: BoxOfficeTableViewCell.identifier, for: indexPath) as! BoxOfficeTableViewCell
-//        
-//        cell.rankLabel.text = boxOfficeList[indexPath.row].rank
-//        cell.movieTitleLabel.text = boxOfficeList[indexPath.row].movieNm
-//        cell.dateLabel.text = boxOfficeList[indexPath.row].openDt
-//        
-//        return cell
-//    }
-//}
